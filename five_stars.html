@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+		    *{
+		    	margin:0;
+		    	padding:0;
+		    }
+		    body{
+		    	text-align:center;
+		    }
+			canvas{
+				margin:120px auto;
+				border:2px solid royalblue;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="myCanvas" width="700" height="600"></canvas>
+		<script>
+			var canvas=document.getElementById("myCanvas");
+			var ctx=null;
+			if(canvas.getContext){
+				ctx=canvas.getContext("2d");
+			}
+			
+			/*开始画五角星啦*/
+			ctx.beginPath();
+			
+			//设置顶点的坐标，根据顶点制定路径
+			for(var i=0;i<5;i++){
+				ctx.lineTo(Math.cos((18+i*72)/180*Math.PI)*200+300,
+				 			-Math.sin((18+i*72)/180*Math.PI)*200+300);
+				 
+				 ctx.lineTo(Math.cos((54+i*72)/180*Math.PI)*80+300,
+				 			-Math.sin((54+i*72)/180*Math.PI)*80+300);
+			}
+			
+			ctx.closePath();
+			//设置边框以及颜色
+			ctx.lineWidth="3";
+			ctx.fillStyle="#E5656C";
+/*			ctx.strokeStyle="#F5270B";*/
+			ctx.shadowColor="#CDCDDA";
+			ctx.shadowOffsetX=20;
+			ctx.shadowOffsetY=30;
+			ctx.shadowBlur=2;
+			ctx.fill();
+/*			ctx.stroke();*/
+			
+		</script>
+	</body>
+</html>

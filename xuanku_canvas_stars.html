@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+		    body{
+		    	text-align:center;
+		    }
+			canvas{
+				margin:120px auto;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="myCanvas" width="600" height="400">您的浏览器不支持canvas</canvas>
+	</body>
+	<script>
+		(function(){
+			//获取canvas元素
+			var canvas=document.getElementById("myCanvas");
+			//获取canvas的宽高度
+			var canvasWidth=canvas.width;
+			var canvasHeight=canvas.height;
+			var ctx=null;//渲染上下文
+			if(canvas.getContext){//判断浏览器是否支持canvas
+				//获取canvas画布的上下文
+				ctx=canvas.getContext("2d");
+			}
+			//新建一个image对象
+			
+			var image=new Image();
+
+			image.onload=function(){
+				//加载完的图像绘制到画布上
+				ctx.drawImage(image,100,100);
+				//实现初始化
+			   /* init(imageData);*/
+			}
+			//设置image的source
+			image.src="img/isux.png";
+			
+			/*
+			 * 获取图像的像素信息，并根据像素信息重新绘制出粒子效果轮廓图
+			 * */
+			var imageData=ctx.getImageData(0,0,canvasWidth,canvasHeight);
+			
+			
+			
+			//用来保存合适的例子
+			var particles=[];
+			//计算并保存坐标
+			function calculate(imageData){
+				debugger;
+				/*var len=imageData.length;*/
+				//每一行每一列
+				var rows=100,
+					cols=100;
+				//每行每列的高宽度
+				var s_width=parseInt(imageData.width/cols);
+				var s_height=parseInt(imageData.height/rows);
+				var pos=0;//粒子在数组中的位置
+				var par_x,par_y;//粒子的x,y坐标
+				var data=imageData.data;
+				
+				//保存合适的粒子,i代表行，
+					for(var j=1;j<=rows;j++){
+						//计算出(i,j)在地址中的位置
+						pos=[(j*s_height-1)*imageData.width+(i*s_width-1)]*4;
+					   console.log(pos);
+						if(data[pos]>250){
+							var particle={
+								//偏移，x,y随机
+								x:imageData.width+i*s_width+(Math.random()-0.5)*20,
+								y:imageData.height+j*s_height+(Math.random()-0.5)*20,
+								fillStyle:"#006eff"
+							}
+							
+							//放入合适的粒子
+							particles.push(particle);
+							console.log(particles);
+						}
+					}
+				}
+			}
+			
+			//绘画图案
+			function draw(){
+				debugger;
+				ctx.clearRect(0,0,canvasWidth,canvasHeight);
+				var len=particles.length,
+					current_particle=null;
+				
+				//把保存的粒子放到画布上
+				for(var i=0,j=len;i<j;i++){
+					current_particle=particles[i];
+					//设置填充颜色
+					ctx.fillStyle=current_particle.fillStyle;
+					//绘画粒子到画布上
+					ctx.fillRect(current_particle.x,current_particle.y,1,1);
+				}
+				
+				
+			}
+			
+			function init(imageData){
+				debugger;
+				calculate(imageData);
+				draw();
+			}
+		}())
+	</script>
+</html>

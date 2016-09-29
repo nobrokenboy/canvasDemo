@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<style> 
+	html {overflow:hidden}
+	body {position: absolute; margin:0; padding:0;width:100%; height:100%}
+	canvas {display:block;border:2px solid #ccc; margin:10px auto;}
+	p {text-align: center; font-size:12px;color:#454545;}
+</style>
+<!--<script src="http://hongru.github.com/js/JCanvas.js"></script>--> 
+<script src="lib/jCanvas.js"></script>
+<canvas id="canvas" width="600" height="400"></canvas>
+<p>键盘上下键改变z方向深度。 当前scale：<span id="scale"></span></p>
+<script> 
+	var canvas = document.getElementById('canvas');
+	var stage = new Stage(canvas);
+	//参数是半径
+	var createBall = function (radius) {
+		radius = (radius === undefined) ? 20 : radius;
+		return new Sprite(stage.ctx, {
+			x: 0,
+			y: 0,
+			width: radius*2,
+			draw: function () { 
+				this.ctx.beginPath();
+				this.ctx.arc(0, 0, this.width/2, 0, Math.PI*2, true);
+				this.ctx.closePath();
+				//Math.min是比较两个值的大小，取最小值
+				this.ctx.fillStyle = 'rgba(0,0,0,'+ Math.min(1, this.width/(2*radius)) +')';
+				this.ctx.fill();
+		
+			}
+		});
+	};
+ 
+	var initialize = function () {
+		var xpos = 0,
+			ypos = 0,
+			zpos = 0,//以上是x,y,z轴的坐标
+			focalLength = 250,//焦距
+			ballR = 20,
+			vpx,
+			vpy;
+		var ball = createBall(ballR);
+		stage.addChild(ball);
+		//获取画布中心的位置
+		vpx = canvas.width/2;
+		vpy = canvas.height/2;
+ 
+		stage.addEventListener('mousemove', function (x, y) {
+			debugger;
+			//获取鼠标偏离中心点的位置
+			xpos = x - vpx;
+			ypos = y - vpy;
+		});
+		document.addEventListener('keydown', function (e) {
+			if (e.keyCode == 38) zpos += 5;
+			if (e.keyCode == 40) zpos -=5;
+		}, false)
+ 
+		stage.onRefresh = function () {
+			//实现z轴扁平化://scale = fl / (fl + z) = 1 / （1 + z/fl）
+			var scale = focalLength/(focalLength + zpos);
+			ball.x = vpx + xpos*scale;
+			ball.y = vpy + ypos*scale;
+			ball.width  = ballR*2*scale;
+			
+
+ 
+			document.getElementById('scale').innerHTML = scale;
+		}
+ 
+		stage.start();
+	};
+ 
+	initialize();
+ 
+</script>
+</html> 
+ 

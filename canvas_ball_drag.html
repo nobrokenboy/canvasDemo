@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>canvas制作一个小球实现拖拽</title>
+		<style>
+		    *{
+		    	margin:0;
+		    	padding:0;
+		    }
+		    body{
+
+		    	width:100%;
+		    	height:100%;
+		    	text-align:center;
+		    }
+			canvas{
+				margin:120px auto;
+				border:1px solid royalblue;
+			}
+		</style>
+	</head>
+	<body>
+
+		<canvas id="myCanvas" width="600" height="500">您的浏览器不支持canvas</canvas>
+	</body>
+	<script>
+		//获取canvas
+		var canvas=document.getElementById("myCanvas");
+		//获取canvas元素距离浏览器左边和顶部的位置
+		var cX=canvas.offsetLeft;
+		var cY=canvas.offsetTop;
+		//获取canvas的宽和高
+		var cWidth=canvas.width;
+		var cHeight=canvas.height;
+		//获取canvas的中点
+		var centerX=canvas.width/2;
+		var centerY=canvas.height/2;
+
+		//获取渲染上下文
+		var ctx=null;
+		//画的球的半径
+		var ballRadius=20;
+
+		if(canvas.getContext){
+			ctx=canvas.getContext("2d");
+		}
+		init();
+
+		//画图像
+		function paintGraph(context,type,options){
+			debugger;
+			var centerPosX=options.x;
+			var centerPosY=options.y;
+			//clearRect的起始坐标是相对canvas元素的
+			context.clearRect(0,0,cWidth,cHeight);
+			
+			context.beginPath();
+			context.fillStyle="yellow";
+			switch(type){
+				/*0代表圆*/
+				case 0:
+				context.arc(centerPosX,centerPosY,ballRadius,0,2*Math.PI);
+				break;
+			}
+			context.closePath();
+			context.fill();
+		}
+		
+		//对图形进行拉拽等事件
+		function animateGraph(obj){
+			obj.addEventListener("mousemove",function(){
+				//获取鼠标点击的x,y轴的位置
+				var targetX=event.layerX;
+				var targetY=event.layerY;
+				//更改小球的中心点位置，再重新绘制
+				paintGraph(ctx,0,{x:targetX,y:targetY});
+				
+
+			});
+		}
+		
+		function init(){
+			paintGraph(ctx,0,{x:centerX,y:centerY});
+			animateGraph(canvas);
+		}
+		
+		
+	</script>
+</html>
