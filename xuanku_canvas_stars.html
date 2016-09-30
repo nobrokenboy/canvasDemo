@@ -6,9 +6,11 @@
 		<style>
 		    body{
 		    	text-align:center;
+		    	background-color:#0C1328;
 		    }
 			canvas{
 				margin:120px auto;
+				border:2px solid red
 			}
 		</style>
 	</head>
@@ -23,67 +25,99 @@
 			var canvasWidth=canvas.width;
 			var canvasHeight=canvas.height;
 			var ctx=null;//渲染上下文
+			var imageData;
+			var particles=[];//用来保存合适的例子
+			//
+			var img={};
 			if(canvas.getContext){//判断浏览器是否支持canvas
 				//获取canvas画布的上下文
 				ctx=canvas.getContext("2d");
+				
+				//新建一个image对象
+				var image=new Image();
+	
+				image.onload=function(){
+					//
+					img.x=200;
+					img.y=100;
+					//加载完的图像绘制到画布上
+					ctx.drawImage(image,img.x,img.y);
+					imageData=ctx.getImageData(img.x,img.y,canvasWidth,canvasHeight);
+					calculate();
+					draw();
+					
+				}
+				//设置image的source
+				image.src="img/isux.png";
 			}
-			//新建一个image对象
-			
-			var image=new Image();
 
-			image.onload=function(){
-				//加载完的图像绘制到画布上
-				ctx.drawImage(image,100,100);
-				//实现初始化
-			   /* init(imageData);*/
-			}
-			//设置image的source
-			image.src="img/isux.png";
-			
-			/*
-			 * 获取图像的像素信息，并根据像素信息重新绘制出粒子效果轮廓图
-			 * */
-			var imageData=ctx.getImageData(0,0,canvasWidth,canvasHeight);
-			
-			
-			
-			//用来保存合适的例子
-			var particles=[];
+
 			//计算并保存坐标
-			function calculate(imageData){
+			function calculate(){
+				
+
 				debugger;
-				/*var len=imageData.length;*/
+				var len=imageData.length;
 				//每一行每一列
 				var rows=100,
 					cols=100;
 				//每行每列的高宽度
-				var s_width=parseInt(imageData.width/cols);
-				var s_height=parseInt(imageData.height/rows);
+				var s_width=parseInt(image.width/cols);
+				var s_height=parseInt(image.height/rows);
 				var pos=0;//粒子在数组中的位置
 				var par_x,par_y;//粒子的x,y坐标
 				var data=imageData.data;
-				
+				debugger;
 				//保存合适的粒子,i代表行，
-					for(var j=1;j<=rows;j++){
-						//计算出(i,j)在地址中的位置
-						pos=[(j*s_height-1)*imageData.width+(i*s_width-1)]*4;
-					   console.log(pos);
-						if(data[pos]>250){
-							var particle={
-								//偏移，x,y随机
-								x:imageData.width+i*s_width+(Math.random()-0.5)*20,
-								y:imageData.height+j*s_height+(Math.random()-0.5)*20,
-								fillStyle:"#006eff"
+					/*for(var i=1;i<cols;i++){
+						for(var j=1;j<=rows;j++){
+							//计算出(i,j)在地址中的位置
+							pos=[(j*imageData.width+(i-1)]*4;
+							if(data[pos]>250){
+								
+								var particle={
+									//偏移，x,y随机
+									x:imageData.width+i*s_width+(Math.random()-0.5)*20,
+									y:imageData.height+j*s_height+(Math.random()-0.5)*20,
+									fillStyle:"#006eff"
+								}
+								
+								//放入合适的粒子
+								particles.push(particle);
+								console.log(particles);
 							}
-							
-							//放入合适的粒子
-							particles.push(particle);
-							console.log(particles);
 						}
 					}
-				}
+					*/
+					for(var i = 0; i < cols; i++) {
+						for(var j = 0; j < rows; j++) {
+							//计算(i,j)在数组中的R的坐标值
+							pos = (j*s_height*img.x+ i*s_width)*4;
+							//判断像素透明度值是否符合要求
+							if(data[pos] > 100){
+								var particle = {
+									//x,y值都随机一下
+									x: img.x+ i*s_width + (Math.random() - 0.5)*20,
+									y: img.y + j*s_height + (Math.random() - 0.5)*20
+								}
+								// 根据图像不同的色值来设定粒子色值
+								if(data[pos+1] < 175 && data[pos+2] < 10) {
+									particle.fillStyle = '#ffa900';
+								} else if(data[pos+1] < 75 && data[pos+1] > 50) {
+									particle.fillStyle = '#ff4085';
+								} else if(data[pos+1] < 220 && data[pos+1] > 190) {
+									particle.fillStyle = '#00cfff';
+								} else if(data[pos+1] < 195 && data[pos+1] > 175) {
+									particle.fillStyle = '#9abc1c';
+								}
+								//符合要求的粒子保存到数组里
+								particles.push(particle);
+							}
+						}
+					}
+					
+				
 			}
-			
 			//绘画图案
 			function draw(){
 				debugger;
@@ -103,11 +137,7 @@
 				
 			}
 			
-			function init(imageData){
-				debugger;
-				calculate(imageData);
-				draw();
-			}
+			
 		}())
 	</script>
 </html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>实现圆形的进度条</title>
+		<style>
+		    *{
+		    	box-sizing:border-box;
+		    	-webkit-box-sizing:border-box;
+		    }
+			.circle-wrapper{
+				position:relative;
+				margin:120px auto;
+				width:200px;
+				height:200px;
+			/*	border:1px solid #ccc;*/
+			}
+			.left{
+				position:absolute;
+				left:0;
+				
+			}
+			.right{
+				position:absolute;
+				right:0;
+			}
+			.rectangle{
+				width:100px;
+				height:200px;
+				overflow:hidden;
+			}
+			.circle{
+				position:absolute;
+				top:0;
+				width:200px;
+				height:200px;
+				border-radius:50%;
+				border:20px solid #C0C0C0;
+				-webkit-transform: rotate(45deg);
+			}
+			
+			.left-circle{
+				border-left:20px solid #FF6633;
+				border-bottom:20px solid #FF6633;
+				left:0;
+				-webkit-animation:leftCircle 3s linear;
+				animation:leftCircle 3s linear;
+			}
+			.right-circle{
+				border-right:20px solid #C0C0C0;
+				border-top:20px solid #C0C0C0;
+				right:0;
+				-webkit-animation:rightCircle 3s linear;
+				animation:rightCircle 3s linear;
+			}
+			
+			/*左边圆环的进度*/
+			@-webkit-keyframes leftCircle{
+				0%{
+					border-right:20px solid #FF6633;
+					border-top:20px solid #FF6633;
+					-webkit-transform:rotate(45deg);
+				}
+				50%{
+					border-right:20px solid #FF6633;
+					border-top:20px solid #FF6633;
+					border-left:20px solid #FFCC33;
+					border-bottom:20px solid #FFCC33;
+					-webkit-transform:rotate(225deg);
+				}
+				100%{
+					border-left:20px solid #FF6633;
+					border-bottom:20px solid #FF6633;
+					-webkit-transform:rotate(225deg);
+				}
+			}
+			
+			/*右边圆环的进度*/
+			@-webkit-keyframes rightCircle{
+				0%{
+					border-right:20px solid #FF6633;
+					border-top:20px solid #FF6633;
+					-webkit-transform:rotate(45deg);
+				}
+				50%{
+					border-right:20px solid #FF6633;
+					border-top:20px solid #FF6633;
+					border-left:20px solid #FFCC33;
+					border-bottom:20px solid #FFCC33;
+					-webkit-transform:rotate(225deg);
+				}
+				100%{
+					border-left:20px solid #FF6633;
+					border-bottom:20px solid #FF6633;
+					-webkit-transform:rotate(225deg);
+				}
+			}
+			
+			
+			
+		</style>
+	</head>
+	<body>
+		<div class="circle-wrapper">
+			<div class="left rectangle">
+				<div class="circle left-circle"></div>
+			</div>
+			<div class="right rectangle">
+				<div class="circle right-circle"></div>
+			</div>
+		</div>
+		
+	
+	</body>
+</html>

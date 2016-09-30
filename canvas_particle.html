@@ -103,6 +103,7 @@
         function getimgData(text){
             drawText(text);
             var imgData = context.getImageData(0,0,canvas.width , canvas.height);
+            				console.log(imgData);
             console.log(imgData);
             context.clearRect(0,0,canvas.width , canvas.height);
             var dots = [];
@@ -111,7 +112,7 @@
                     var i = (y*imgData.width + x)*4;
 				console.log("i:"+i,imgData.data[i]);       
                     if(imgData.data[i] >= 128){
-                    	            	console.log("i:"+i,imgData.data[i]);       
+                    	            /*	console.log("i:"+i,imgData.data[i]);       */
                         var dot = new Dot(x-3 , y-3 , 0 , 3);
                         dots.push(dot);
                     }
