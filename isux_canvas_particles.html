@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="zh">
 <head>
@@ -49,8 +48,8 @@
 			image.obj = img;
 			image.w = img.width;
 			image.h = img.height;
-			image.x =0;
-			image.y = 0;
+			image.x = parseInt(canvas.w/2 - image.w/2);
+			image.y = 200;
 
 			//把图像绘制到画布坐标为(100,100)的地方
 			canvas.ctx.drawImage(image.obj,image.x,image.y,image.w,image.h);
@@ -81,13 +80,12 @@
 		var pos = 0; //数组中的位置
 		var par_x, par_y;  //粒子的x,y坐标
 		var data = image.imageData.data;  //像素值数组
-
 		for(var i = 0; i < cols; i++) {
 			for(var j = 0; j < rows; j++) {
 				//计算(i,j)在数组中的R的坐标值
 				pos = (j*s_height*image.w + i*s_width)*4;
 				//判断像素透明度值是否符合要求
-				if(data[pos] > 100){
+				if(data[pos+3] > 100){
 					var particle = {
 						//x,y值都随机一下
 						x: image.x + i*s_width + (Math.random() - 0.5)*20,
@@ -103,7 +101,6 @@
 					} else if(data[pos+1] < 195 && data[pos+1] > 175) {
 						particle.fillStyle = '#9abc1c';
 					}
-					/*particle.fillStyle = "red";*/
 					//符合要求的粒子保存到数组里
 					particles.push(particle);
 				}
@@ -126,7 +123,7 @@
 			//设置填充颜色
 			canvas.ctx.fillStyle = curr_particle.fillStyle;
 			//绘粒子到画布上
-			canvas.ctx.fillRect(curr_particle.x,curr_particle.y,2,2);
+			canvas.ctx.fillRect(curr_particle.x,curr_particle.y,1,1);
 		}
 	}
 }())
